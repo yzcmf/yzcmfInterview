@@ -34,18 +34,22 @@ def reversedKgroup(head, K):
 
         curhead = t.next
         t.next = None
-        prev = reverse(h)
+        prev = reverse(h) #  prev is equal to t
 
         if i == 0:
-            head = prev
+            head = t # use prev is same
         else:
-            lastTail.next = prev
+            lastTail.next = t # use prev is same
 
         lastTail = h
         i += 1
 
-    if curhead:
-        lastTail.next = curhead
+    # Last R part reverse
+    lastTail.next = reverse(curhead)
+
+    # Last R part not reverse
+    # if curhead:
+    #     lastTail.next = curhead
 
     return head
 
