@@ -37,7 +37,9 @@ def getChild(root, val):
 # get one-side root-node path
 def getPath(root, node, path):
     if not root: return False
-    if root == node: return True
+    if root == node:
+        path.append(root.val)
+        return True
     # if getPath(root.left, node, path[:] + [root]) or getPath(root.right, node, path[:] + [root]):
     #     return path[:] + [root]
     # else:
@@ -51,7 +53,7 @@ def getPath(root, node, path):
 # get one-side root-node path's number of node
 def getPathNodeNumber(root, node):
     if not root: return -1
-    if root == node: return 0
+    if root == node: return 1
     lc = getPathNodeNumber(root.left, node)
     rc = getPathNodeNumber(root.right, node)
     return -1 if lc == -1 and rc == -1 else 1 + max(lc, rc)
@@ -64,14 +66,14 @@ def getLCA(r, p1, p2):
     if left and right: return r
     return left if left else right
 
-# M1 -- diameter = rp1 + rp2 - rlca * 2; M2 -- diameter = lcap1 + lcap2
+# M1 -- diameter = rp1 + rp2 - rlca * 2 + 1; M2 -- diameter = lcap1 + lcap2 - 1
 def BinaryTreeDiameter(root, p1, p2):
     lca = getLCA(root, p1, p2)
 
     # rp1 = getPath(root, p1, [])
     # rp2 = getPath(root, p2, [])
-    rlca, lcap1P, lcap2P = [], [], []
-    getPath(root, lca, rlca)
+    rlcaP, lcap1P, lcap2P = [], [], []
+    getPath(root, lca, rlcaP)
     getPath(lca, p1, lcap1P)
     getPath(lca, p2, lcap2P)
 
@@ -82,7 +84,7 @@ def BinaryTreeDiameter(root, p1, p2):
     lcap1 = getPathNodeNumber(lca, p1)
     lcap2 = getPathNodeNumber(lca, p2)
 
-    return rp1+rp2-rlca*2, lcap1+lcap2, 'lcap1 : ' ,  lcap1P, 'lcap2 : ' ,  lcap2P, 'rlca : ' ,  rlca
+    return rp1+rp2-rlca*2+1, lcap1+lcap2-1, 'lcap1 : ' ,  lcap1P, 'lcap2 : ' ,  lcap2P, 'rlca : ' ,  rlcaP
 
 
 # def BinaryTreeDiameter(root, p1, p2):
@@ -119,7 +121,7 @@ root = builder(L) # level order builder
 p1 = getChild(root, 2)
 p2 = getChild(root, 3)
 p3 = getChild(root, 7)
-print (p1, p2, p3)
+print(p1, p2, p3)
 print(BinaryTreeDiameter(root, p1, p2))
 print(BinaryTreeDiameter(root, p2, p3))
 print(BinaryTreeDiameter(root, p1, p3))
