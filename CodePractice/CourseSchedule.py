@@ -5,6 +5,7 @@ def CanSchedule(numCourses, prerequisites):
 
     graph = collections.defaultdict(set)
 
+    # a -> b
     for prerequisite in prerequisites:
         a, b = prerequisite
         graph[b].add(a)
@@ -43,6 +44,7 @@ def Schedule(numCourses, prerequisites):
 
     graph = collections.defaultdict(set)
 
+    # a -> b
     for prerequisite in prerequisites:
         a, b = prerequisite
         graph[b].add(a)
@@ -51,40 +53,98 @@ def Schedule(numCourses, prerequisites):
 
 
     # to detect a cycle
-    def dfs(ind, path):
+    def dfs(ind):
         if haveTakenCourses[ind] == 2:
             return False # no cycle is found
 
         if haveTakenCourses[ind] == 1:
-            path = []
             return True  # find a cycle
 
         haveTakenCourses[ind] = 1
-        path.append(ind)
+
 
         for preRequiredCourse in graph[ind]:
-            if dfs(preRequiredCourse, path):
+            if dfs(preRequiredCourse):
                 return True
 
-        res.append(path)
+        res.append(ind)
         haveTakenCourses[ind] = 2
         return False
 
-    path = []
+
     res = []
     for i in range(numCourses):
-        if dfs(i, path):
+        if dfs(i):
             return []
 
-    res = set(map(tuple, res))
-    return [ '->'.join(map(str,path)) + '->' + str(path[0]) for path in res]
+    return res
+
+def CanScheduleB(numCourses, prerequisites):
+    if numCourses <=0 : return False
+    graph = collections.defaultdict(set)
+    indegree = [0] * numCourses
+
+    # a -> b
+    for a, b in prerequisites:
+        graph[a].add(b) # diff from dfs; low level course -> high level courses
+        indegree[b] += 1
+
+    q = collections.deque(c for c in graph if indegree[c] == 0)
+    cnt = 0
+
+    while q:
+        c = q.popleft()
+        cnt += 1
+        for nei in graph[c]:
+            indegree[nei] -= 1
+            if indegree[nei] == 0:
+                q.append(nei)
+
+    return cnt == numCourses
+
+
+def ScheduleB(numCourses, prerequisites):
+    if numCourses <= 0: return False
+    graph = collections.defaultdict(set)
+    indegree = [0] * numCourses
+
+    # a -> b
+    for a, b in prerequisites:
+        graph[a].add(b)
+        indegree[b] += 1
+
+
+    q = collections.deque(c for c in graph if indegree[c] == 0)
+    res = []
+
+    while q:
+        c = q.popleft()
+        res.append(c)
+        for nei in graph[c]:
+            indegree[nei] -= 1
+            if indegree[nei] == 0:
+                q.append(nei)
+
+    return res if len(res) == numCourses else []
 
 
 numCourses, prerequisites = 3, [[0, 1], [1, 2], [0, 2]]
 print(CanSchedule(numCourses, prerequisites))
 print(Schedule(numCourses, prerequisites))
+print(CanScheduleB(numCourses, prerequisites))
+print(ScheduleB(numCourses, prerequisites))
 
-numCourses, prerequisites = 4, [[0, 1], [1, 2], [3, 1], [2, 0]]
+numCourses, prerequisites = 4, [[0, 1], [1, 2], [2, 3]]
 print(CanSchedule(numCourses, prerequisites))
 print(Schedule(numCourses, prerequisites))
+print(CanScheduleB(numCourses, prerequisites))
+print(ScheduleB(numCourses, prerequisites))
 
+
+'''
+0->1->2
+
+0->1->2
+3->1
+2->0
+'''
