@@ -11,7 +11,7 @@ def renderHTML(node):
     if not node: return ""
     tag = node['tag']
     sub_res = ''
-    for childNode in node['children']:
+    for childNode in node.get('children', []):
         sub_res += renderHTML(childNode)
     return '<' + tag + '>' + sub_res + '<' + '/' + tag + '>'
 
