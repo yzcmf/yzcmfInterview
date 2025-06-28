@@ -15,6 +15,23 @@ def renderHTML(node):
         sub_res += renderHTML(childNode)
     return '<' + tag + '>' + sub_res + '<' + '/' + tag + '>'
 
+
+def render_html_non_recursive(node):
+    if not node or 'tag' not in node: return ""
+    stack = [(node, False)]
+    res = ''
+    while stack:
+        node, visited = stack.pop()
+        tag = node['tag']
+        if visited:
+            res += '<' + '/' + tag + '>'
+        else:
+            stack.append((node, True))
+            res += '<' + tag + '>'
+            for childNode in reversed(node.get('children', [])):
+                stack.append((childNode,False))
+    return res
+
 input_node = {
     "tag": "div",
     "children": [
@@ -41,3 +58,4 @@ def renderHTML2(node):
 
 print(renderHTML(input_node))
 print(renderHTML2(input_node))
+print(render_html_non_recursive(input_node))
