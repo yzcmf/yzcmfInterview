@@ -8,7 +8,7 @@ children: 子节点数组
 要求： 生成 HTML 字符串，格式如：<tag> ... children html ... </tag>
 '''
 def renderHTML(node):
-    if not node: return ""
+    if not node or 'tag' not in node: return ""
     tag = node['tag']
     sub_res = ''
     for childNode in node.get('children', []):
