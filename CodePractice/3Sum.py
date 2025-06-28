@@ -17,7 +17,7 @@ def ThreeSum(A):
             k -= 1
     return mx
 
-def ThreeSumT(A, T):
+def ThreeSumT(A, T=0):
     N = len(A)
     if N <= 2: return A
     A.sort() # O(NlogN)
@@ -41,7 +41,7 @@ def ThreeSumT(A, T):
                 k -=1
     return res
 
-def ThreeSumT2(A, T):
+def ThreeSumT2(A, T=0):
     N = len(A)
     if N <= 2: return A
     A.sort() # O(NlogN)
@@ -66,7 +66,7 @@ for A in AA:
     print(ThreeSum(A), end = "\n")
 
 for A in AA:
-    print(ThreeSumT(A, 0), end="\n")
+    print(ThreeSumT(A), end="\n")
 
 for A in AA:
-    print(ThreeSumT2(A, 0), end="\n")
+    print(ThreeSumT2(A), end="\n")
