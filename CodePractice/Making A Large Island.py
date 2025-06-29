@@ -84,6 +84,57 @@ def largestIsland(A):
     return mx
 
 
+def largestIsland2(grid):
+    from collections import defaultdict
+
+    if not grid or not grid[0]:
+        return 0
+
+    N = len(grid)
+    island_id = 2  # 从2开始编号，避免与1混淆
+    island_area = defaultdict(int)
+
+    def dfs(x, y, id):
+        if 0 <= x < N and 0 <= y < N and grid[x][y] == 1:
+            grid[x][y] = id
+            area = 1
+            for dx, dy in [(-1,0),(1,0),(0,-1),(0,1)]:
+                area += dfs(x+dx, y+dy, id)
+            return area
+        return 0
+
+    # 1. 染色所有岛屿并记录每块岛屿的面积
+    for i in range(N):
+        for j in range(N):
+            if grid[i][j] == 1:
+                area = dfs(i, j, island_id)
+                island_area[island_id] = area
+                island_id += 1
+
+    # 2. 尝试将每个 0 改为 1，并计算最大面积
+    max_area = max(island_area.values() or [0])  # island_area.value() is None; 全 0 情况
+    for i in range(N):
+        for j in range(N):
+            if grid[i][j] == 0:
+                seen = set()
+                area = 1
+                for dx, dy in [(-1,0),(1,0),(0,-1),(0,1)]:
+                    ni, nj = i + dx, j + dy
+                    if 0 <= ni < N and 0 <= nj < N and grid[ni][nj] > 1:
+                        island = grid[ni][nj]
+                        if island not in seen:
+                            seen.add(island)
+                            area += island_area[island]
+                max_area = max(max_area, area)
+
+    return max_area
+
+def largestIsland_BFS(A):
+    pass
+
+def largestIsland_UF(A):
+    pass
+
 print(largestIsland([[1,0],[0,1]]))                     # Expected: 3
 print(largestIsland([[1,1],[1,0]]))                     # Expected: 4
 print(largestIsland([[1,1],[1,1]]))                     # Expected: 4
@@ -91,21 +142,38 @@ print(largestIsland([[1,0,1,0],
                      [0,1,1,0],
                      [1,0,0,1],
                      [0,1,1,0]]))            # Expected: 7
-
-
 print(largestIsland([[1, 1, 1],
                      [1, 1, 1],
                      [0, 1, 0]]))            # Expected: 8
-
-
 print(largestIsland([[1, 0, 1, 0, 0],
                     [1, 1, 0, 0, 1],
                     [1, 0, 1, 0, 1],
                     [0, 0, 1, 1, 1],
                     [0, 0, 0, 1, 1]]))          # Expected: 14
-
-
 print(largestIsland([[1, 0, 0, 1, 0, 0],
+                     [0, 0, 0, 1, 1, 1],
+                     [0, 0, 1, 1, 1, 0],
+                     [1, 1, 1, 1, 0, 1],
+                     [1, 0, 1, 1, 1, 1],
+                     [1, 0, 1, 1, 0, 1]]))          # Expected: 22
+
+
+print(largestIsland2([[1,0],[0,1]]))                     # Expected: 3
+print(largestIsland2([[1,1],[1,0]]))                     # Expected: 4
+print(largestIsland2([[1,1],[1,1]]))                     # Expected: 4
+print(largestIsland2([[1,0,1,0],
+                     [0,1,1,0],
+                     [1,0,0,1],
+                     [0,1,1,0]]))            # Expected: 7
+print(largestIsland2([[1, 1, 1],
+                     [1, 1, 1],
+                     [0, 1, 0]]))            # Expected: 8
+print(largestIsland2([[1, 0, 1, 0, 0],
+                    [1, 1, 0, 0, 1],
+                    [1, 0, 1, 0, 1],
+                    [0, 0, 1, 1, 1],
+                    [0, 0, 0, 1, 1]]))          # Expected: 14
+print(largestIsland2([[1, 0, 0, 1, 0, 0],
                      [0, 0, 0, 1, 1, 1],
                      [0, 0, 1, 1, 1, 0],
                      [1, 1, 1, 1, 0, 1],
