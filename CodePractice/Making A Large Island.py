@@ -128,12 +128,127 @@ def largestIsland2(grid):
 
     return max_area
 
-def largestIsland_BFS(A):
-    pass
+from collections import deque, defaultdict
 
+# O(N²)	O(N²)
+def largestIsland_BFS(grid):
+    n = len(grid)
+    island_id = 2
+    island_area = defaultdict(int)
+
+    # 1. BFS 标记每块岛屿的编号和面积
+    def bfs(x, y, island_id):
+        q = deque([(x, y)])
+        grid[x][y] = island_id
+        area = 1
+        while q:
+            i, j = q.popleft()
+            for dx, dy in [(-1,0), (1,0), (0,-1), (0,1)]:
+                ni, nj = i + dx, j + dy
+                if 0 <= ni < n and 0 <= nj < n and grid[ni][nj] == 1:
+                    grid[ni][nj] = island_id
+                    q.append((ni, nj))
+                    area += 1
+        return area
+
+    for i in range(n):
+        for j in range(n):
+            if grid[i][j] == 1:
+                island_area[island_id] = bfs(i, j, island_id)
+                island_id += 1
+
+    # 2. 遍历所有 0 点，试图连接周围不同岛屿
+    max_area = max(island_area.values() or [0])
+    for i in range(n):
+        for j in range(n):
+            if grid[i][j] == 0:
+                seen = set()
+                area = 1
+                for dx, dy in [(-1,0), (1,0), (0,-1), (0,1)]:
+                    ni, nj = i + dx, j + dy
+                    if 0 <= ni < n and 0 <= nj < n:
+                        id_ = grid[ni][nj]
+                        if id_ > 1 and id_ not in seen:
+                            seen.add(id_)
+                            area += island_area[id_]
+                max_area = max(max_area, area)
+
+    return max_area
+
+
+class UnionFind(object):
+    def __init__(self, size):
+        self.size = [1] * size
+        self.parent = list(range(size))
+
+    # x <- y
+    def union(self, x, y):
+        px, py = self.find(x), self.find(y)
+        if px == py: return
+        if self.size[px] < self.size[py]:
+            px, py = py, px  # always attach smaller tree under larger
+        self.size[px] += self.size[py]
+        self.parent[py] = px
+
+    def find(self, x):
+        if self.parent[x] != x:
+            self.parent[x] = self.find(self.parent[x])
+        return self.parent[x]
+
+    def getSize(self, x):
+        return self.size[self.find(x)]
+
+
+# O(N²)	O(N²)
 def largestIsland_UF(A):
-    pass
+    if not A or not A[0]: return 0
+    N = len(A)
+    island_area = {}
 
+    uf = UnionFind(N*N)
+
+    # 1. union 所有岛屿 1 to its ancestor as island_id
+    for i in range(N):
+        for j in range(N):
+            if A[i][j] == 1:
+                x = uf.find(i + N * j)
+                for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+                    ni, nj = i + dx, j + dy
+                    if 0 <= ni < N and 0 <= nj < N and A[ni][nj] == 1:
+                        y = uf.find(ni + N * nj)
+                        uf.union(x, y)
+                        # uf.union(i + N * j, ni + N * nj)
+
+    # 2. getsize or getarea from island_id
+    for i in range(N):
+        for j in range(N):
+            if A[i][j] == 1:
+                island_id = uf.find(i + N * j)
+                if island_id not in island_area:
+                    island_area[island_id] = uf.getSize(island_id)
+
+    # 3. max_area
+    max_area = max(island_area.values() or [0])
+
+    # 4. mark 0 to 1 and find the max area
+    for i in range(N):
+        for j in range(N):
+            if A[i][j] == 0:
+                seen = set()
+                area = 1
+                for dx, dy in [(-1,0), (1,0), (0,-1), (0,1)]:
+                    ni, nj = i + dx, j + dy
+                    if 0 <= ni < N and 0 <= nj < N:
+                        id_ = uf.find(ni + N * nj)
+                        if id_ not in seen:
+                            seen.add(id_)
+                            area += island_area.get(id_, 0)
+                max_area = max(max_area, area)
+
+    return max_area
+
+
+print("\n------DFS-------- \n")
 print(largestIsland([[1,0],[0,1]]))                     # Expected: 3
 print(largestIsland([[1,1],[1,0]]))                     # Expected: 4
 print(largestIsland([[1,1],[1,1]]))                     # Expected: 4
@@ -156,7 +271,7 @@ print(largestIsland([[1, 0, 0, 1, 0, 0],
                      [1, 0, 1, 1, 1, 1],
                      [1, 0, 1, 1, 0, 1]]))          # Expected: 22
 
-
+print("\n------DFS2-------- \n")
 print(largestIsland2([[1,0],[0,1]]))                     # Expected: 3
 print(largestIsland2([[1,1],[1,0]]))                     # Expected: 4
 print(largestIsland2([[1,1],[1,1]]))                     # Expected: 4
@@ -173,6 +288,52 @@ print(largestIsland2([[1, 0, 1, 0, 0],
                     [0, 0, 1, 1, 1],
                     [0, 0, 0, 1, 1]]))          # Expected: 14
 print(largestIsland2([[1, 0, 0, 1, 0, 0],
+                     [0, 0, 0, 1, 1, 1],
+                     [0, 0, 1, 1, 1, 0],
+                     [1, 1, 1, 1, 0, 1],
+                     [1, 0, 1, 1, 1, 1],
+                     [1, 0, 1, 1, 0, 1]]))          # Expected: 22
+
+print("\n------BFS-------- \n")
+print(largestIsland_BFS([[1,0],[0,1]]))                     # Expected: 3
+print(largestIsland_BFS([[1,1],[1,0]]))                     # Expected: 4
+print(largestIsland_BFS([[1,1],[1,1]]))                     # Expected: 4
+print(largestIsland_BFS([[1,0,1,0],
+                     [0,1,1,0],
+                     [1,0,0,1],
+                     [0,1,1,0]]))            # Expected: 7
+print(largestIsland_BFS([[1, 1, 1],
+                     [1, 1, 1],
+                     [0, 1, 0]]))            # Expected: 8
+print(largestIsland_BFS([[1, 0, 1, 0, 0],
+                    [1, 1, 0, 0, 1],
+                    [1, 0, 1, 0, 1],
+                    [0, 0, 1, 1, 1],
+                    [0, 0, 0, 1, 1]]))          # Expected: 14
+print(largestIsland_BFS([[1, 0, 0, 1, 0, 0],
+                     [0, 0, 0, 1, 1, 1],
+                     [0, 0, 1, 1, 1, 0],
+                     [1, 1, 1, 1, 0, 1],
+                     [1, 0, 1, 1, 1, 1],
+                     [1, 0, 1, 1, 0, 1]]))          # Expected: 22
+
+print("\n------UF-------- \n")
+print(largestIsland_UF([[1,0],[0,1]]))                     # Expected: 3
+print(largestIsland_UF([[1,1],[1,0]]))                     # Expected: 4
+print(largestIsland_UF([[1,1],[1,1]]))                     # Expected: 4
+print(largestIsland_UF([[1,0,1,0],
+                     [0,1,1,0],
+                     [1,0,0,1],
+                     [0,1,1,0]]))            # Expected: 7
+print(largestIsland_UF([[1, 1, 1],
+                     [1, 1, 1],
+                     [0, 1, 0]]))            # Expected: 8
+print(largestIsland_UF([[1, 0, 1, 0, 0],
+                    [1, 1, 0, 0, 1],
+                    [1, 0, 1, 0, 1],
+                    [0, 0, 1, 1, 1],
+                    [0, 0, 0, 1, 1]]))          # Expected: 14
+print(largestIsland_UF([[1, 0, 0, 1, 0, 0],
                      [0, 0, 0, 1, 1, 1],
                      [0, 0, 1, 1, 1, 0],
                      [1, 1, 1, 1, 0, 1],
