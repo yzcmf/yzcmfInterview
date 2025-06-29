@@ -1,4 +1,34 @@
 '''
+                 动态规划 (DP)
+                   │
+    ┌──────────────┼──────────────┐
+线性DP        区间DP        背包DP (0/1/完全)
+   │              │              │
+状态压缩     树形DP        二维/分组背包
+   │              │
+数位DP       记忆化DFS
+   │
+区间优化 / 斜率优化（进阶）
+
+
+coinChangeI, II 背包DP - 完全背包 选无限次 从左往右
+dp = [0] * (capacity + 1)
+for i in range(len(weights)):
+    for j in range(weights[i], capacity + 1):  # 从左往右
+        dp[j] = max(dp[j], dp[j - weights[i]] + values[i])
+
+背包DP - 0/1背包 选一次 从右往左
+# capacity 表示背包最大容量
+# weights 和 values 为每个物品的重量和价值
+dp = [0] * (capacity + 1)
+for i in range(len(weights)):
+    for j in range(capacity, weights[i] - 1, -1):  # 从右往左，避免重复使用
+        dp[j] = max(dp[j], dp[j - weights[i]] + values[i])
+
+
+'''
+
+'''
 给你一个整数数组 coins，表示不同面额的硬币；一个整数 amount，表示总金额。
 请你计算并返回 可以凑成总金额所需的最少的硬币个数。如果没有任何一种硬币组合能组成该金额，返回 -1。
 你可以认为每种硬币的数量是无限的。
