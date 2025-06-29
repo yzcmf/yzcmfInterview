@@ -17,6 +17,7 @@ for i in range(len(weights)):
     for j in range(weights[i], capacity + 1):  # 从左往右
         dp[j] = max(dp[j], dp[j - weights[i]] + values[i])
 
+
 背包DP - 0/1背包 选一次 从右往左
 # capacity 表示背包最大容量
 # weights 和 values 为每个物品的重量和价值
