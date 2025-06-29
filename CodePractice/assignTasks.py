@@ -72,9 +72,6 @@ def assignTasks(servers, tasks):
 
     return ans
 
-
-
-
 servers = [3,3,2]
 tasks = [1,2,3,2,1,2]
 print(assignTasks(servers, tasks))
