@@ -1,6 +1,6 @@
 '''
 1. Basic Component (MessageQueue; DataBase; Cache; Lock; RateLimiter; CDN; API gateway; SSO; CI/CD; SLA/SLO; Log; Monitoring; ...)
-2. Whole System (Facebook; Amazon; Google Search/Docs/Drive/Youtube; ... )
+2. Whole System (Facebook; Amazon; Google Search/Docs/Drive/Youtube; Quant; ... )
 
 ### ✅ 1. 消息队列（Message Queue）系统设计图：Producer → Queue → Consumer 架构
 
