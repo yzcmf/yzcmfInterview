@@ -10,6 +10,7 @@ def multiEmailSender():
 
     # 多账号配置
     accounts = [
+        {"email": "yzcmf453@gmail.com", "pwd": "pccvvkvgbomopqnt", "smtp": "smtp.gmail.com", "port": 587},
         {"email": "yzcmf80@gmail.com", "pwd": "gytaldifxehhawbc", "smtp": "smtp.gmail.com", "port": 587},
         {"email": "yzcmf72@gmail.com", "pwd": "ioyvlinfqmjvjgnl", "smtp": "smtp.gmail.com", "port": 587},
         # 可继续添加账号
@@ -50,7 +51,7 @@ def multiEmailSender():
             return False
 
     # 加载收件人邮箱列表
-    with open("./data/final_combined_unique_emails_1_202.csv", encoding="utf-8") as f:
+    with open("./data/screenshot_emails_deduplicated.csv", encoding="utf-8") as f:
         reader = csv.reader(f)
         raw_emails = [row[0].strip() for row in reader if row]
 

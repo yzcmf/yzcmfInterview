@@ -1,2 +1,3 @@
 # Design multi-sender as Referers; Recuriters; Hiring Managers; Co-founders; Job Application
 # Design to auto submit multi job application form; such as LinkedIn; Official Web as Google; MIT; ...
+# 1. playright 2. selium  3. plugin
