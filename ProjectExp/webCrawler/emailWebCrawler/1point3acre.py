@@ -11,7 +11,7 @@ headers = {
 
 results = []
 
-for page_num in range(201, 203):
+for page_num in range(1, 8):
     page_url = page_template.format(page_num)
     print(f"📄 正在处理第 {page_num} 页：{page_url}")
 
@@ -47,9 +47,9 @@ for page_num in range(201, 203):
         continue
 
 # 保存为 CSV
-with open("result/1point3acres_emails_page201to202.csv", "w", newline="", encoding="utf-8") as f:
+with open("result/1point3acres_emails_page1to7.csv", "w", newline="", encoding="utf-8") as f:
     writer = csv.writer(f)
     writer.writerow(["帖子标题", "帖子链接", "提取的邮箱"])
     writer.writerows(results)
 
-print("🎉 完成所有页面抓取，保存为 1point3acres_emails_page7to50.csv")
+print("🎉 完成所有页面抓取，保存为 1point3acres_emails_page1to7.csv")

@@ -1,109 +1,67 @@
-import time, random
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
+from playwright.sync_api import sync_playwright
 
-# --- CONFIG --- #
-LINKEDIN_EMAIL = 'your_email@example.com'
-LINKEDIN_PASSWORD = 'your_password'
-JOB_SEARCH_URL = "https://www.linkedin.com/jobs/search/?currentJobId=4233977704&f_AL=true&f_WT=2%2C3&geoId=103644278&keywords=software%20engineering%20manager&origin=JOB_SEARCH_PAGE_JOB_FILTER&refresh=true&sortBy=R"
-
-def random_answer():
-    # Customize if needed
-    return random.choice(["Yes", "No", "3 years", "5", "I'm flexible", "N/A"])
-
-# --- START BROWSER --- #
-driver = webdriver.Chrome()
-driver.get("https://www.linkedin.com/login")
-time.sleep(2)
-
-# --- LOGIN --- #
-driver.find_element(By.ID, "username").send_keys(LINKEDIN_EMAIL)
-driver.find_element(By.ID, "password").send_keys(LINKEDIN_PASSWORD)
-driver.find_element(By.XPATH, "//button[@type='submit']").click()
-time.sleep(3)
-
-# --- OPEN SEARCH PAGE --- #
-driver.get(JOB_SEARCH_URL)
-time.sleep(3)
-
-# --- SCROLL TO LOAD JOBS --- #
-for _ in range(2):
-    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-    time.sleep(2)
-
-# --- COLLECT JOB LINKS --- #
-jobs = driver.find_elements(By.CLASS_NAME, 'job-card-container__link')
-job_links = [job.get_attribute('href') for job in jobs if job.get_attribute('href')]
-
-# --- APPLY LOOP --- #
-for job_url in job_links:
+def apply_job(page, job_url):
     try:
-        driver.get(job_url)
-        time.sleep(2)
+        page.goto(job_url, timeout=20000)
+        page.wait_for_timeout(3000)
 
-        easy_apply = driver.find_element(By.XPATH, "//button[contains(@class, 'jobs-apply-button')]")
-        easy_apply.click()
-        time.sleep(2)
+        # 滚动到 Easy Apply 按钮（解决 hidden 问题）
+        easy_apply_btn = page.locator("button:has-text('Easy Apply')").first
+        easy_apply_btn.scroll_into_view_if_needed()
+        page.wait_for_timeout(1000)
 
-        while True:
-            # --- Fill Inputs --- #
-            inputs = driver.find_elements(By.TAG_NAME, 'input')
-            for input_element in inputs:
-                try:
-                    if input_element.is_displayed() and input_element.is_enabled():
-                        input_element.clear()
-                        input_element.send_keys(random_answer())
-                except:
-                    continue
+        # 强制点击（跳过可见性、可点击检查）
+        easy_apply_btn.click(force=True)
+        page.wait_for_timeout(2000)
 
-            # --- Dropdowns --- #
-            dropdowns = driver.find_elements(By.TAG_NAME, 'select')
-            for select in dropdowns:
-                try:
-                    options = select.find_elements(By.TAG_NAME, 'option')
-                    if len(options) > 1:
-                        options[random.randint(1, len(options) - 1)].click()
-                except:
-                    continue
-
-            # --- Checkboxes --- #
-            checkboxes = driver.find_elements(By.XPATH, "//input[@type='checkbox']")
-            for box in checkboxes:
-                try:
-                    if not box.is_selected() and random.choice([True, False]):
-                        driver.execute_script("arguments[0].click();", box)
-                except:
-                    continue
-
-            time.sleep(1)
-
-            # --- Submit or Next --- #
+        # 自动填写任意 input
+        for i in range(page.locator("input").count()):
             try:
-                submit = driver.find_element(By.XPATH, "//button[@aria-label='Submit application']")
-                if submit.is_enabled():
-                    submit.click()
-                    print(f"✅ Submitted: {job_url}")
-                    break
+                page.locator("input").nth(i).fill("Yes")
             except:
-                try:
-                    next_btn = driver.find_element(By.XPATH, "//button[contains(text(), 'Next')]")
-                    next_btn.click()
-                    time.sleep(2)
-                except:
-                    print(f"❌ Multi-step or complex form, skipping: {job_url}")
-                    try:
-                        close_btn = driver.find_element(By.CLASS_NAME, "artdeco-modal__dismiss")
-                        close_btn.click()
-                        time.sleep(1)
-                        discard_btn = driver.find_element(By.XPATH, "//button[contains(text(), 'Discard')]")
-                        discard_btn.click()
-                    except:
-                        pass
-                    break
+                continue
 
+        # 提交按钮点击（如有）
+        submit_btn = page.locator("button[aria-label='Submit application']")
+        if submit_btn.is_visible():
+            submit_btn.click()
+            print(f"✅ Applied: {job_url}")
+        else:
+            print(f"❌ Multi-step or locked: {job_url}")
     except Exception as e:
-        print(f"❌ Skipped job due to error: {e}")
-        continue
+        print(f"❌ Error: {e} at {job_url}")
 
-driver.quit()
+with sync_playwright() as p:
+    browser = p.chromium.launch_persistent_context(user_data_dir="./linkedin-session", headless=False)
+    page = browser.new_page()
+
+    search_url = "https://www.linkedin.com/jobs/search/?currentJobId=4212271032&f_AL=true&f_WT=2&geoId=103644278&origin=JOB_SEARCH_PAGE_JOB_FILTER&refresh=true&sortBy=R"
+    page.goto(search_url)
+    page.wait_for_timeout(3000)
+
+    # 滚动加载更多
+    for _ in range(50):
+        page.mouse.wheel(0, 3000)
+        page.wait_for_timeout(1500)
+
+    # 提取所有 Easy Apply 链接
+    job_cards = page.locator("li[data-occludable-job-id]")
+    job_links = []
+
+    count = job_cards.count()
+    for i in range(count):
+        card = job_cards.nth(i)
+        easy_apply = card.locator("li:has-text('Easy Apply')")
+        if easy_apply.count() > 0:
+            link = card.locator("a.job-card-container__link")
+            href = link.get_attribute("href")
+            if href and href.startswith("/jobs/view/"):
+                full_url = "https://www.linkedin.com" + href
+                job_links.append(full_url)
+
+    print(f"🔍 Found {len(job_links)} Easy Apply jobs.")
+
+    for link in job_links:
+        apply_job(page, link)
+
+    browser.close()
