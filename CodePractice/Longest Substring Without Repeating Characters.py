@@ -59,8 +59,8 @@ def lengthOfLongestSubstring(S: str) -> int:
     l = r = 0
     d = {}
     for r in range(N):
-        if S[r] in d and d[S[r]] >= l : # 对于 "abba"：遍历到第二个 b 时，S[r] in d 为真；move l 为 第一个b的index + 1
-                l = d[S[r]] + 1
+        if S[r] in d and d[S[r]] >= l: # 对于 "abba"：遍历到第二个 b 时，S[r] in d 为真；move l 为 第一个b的index + 1
+            l = d[S[r]] + 1
         res = max(res, r - l + 1)
         d[S[r]] = r
     return res
