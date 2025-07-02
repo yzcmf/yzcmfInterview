@@ -6,6 +6,7 @@ class Solution():
     def __init__(self):
         pass
 
+    # 给定一个字符串 s，返回包含不同字符 (最多包含无限个不同字符，freq=1) 的最长子串的长度。
     def LongestSubstringWithoutRepeatingCharacters(self, S):
         if not S: return ""
         N = len(S)
