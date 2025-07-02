@@ -1,3 +1,4 @@
+# Concept for an interview
 '''
 
 ### ✅ Redis / MySQL / HTTPS 八股速查表
@@ -42,7 +43,5 @@
 | 表爆炸   | 做分表分库 + Range + Hash 策略 |
 | 接口延迟高 | 使用并发批量接口 + 限流保护         |
 | 内存溢出  | 排查 GC Logs + 对象逃逸分析     |
-
-
 
 '''
