@@ -276,6 +276,11 @@ def run_batch(prompt_list):
             else:
                 print(f"⚠️ 检测到已有 README.autogen.md，保留两者")
 
+        # ✅ 每轮生成后自动提交并推送到 autogen 分支
+        subprocess.run(["git", "add", "."], cwd=AUTO_PROJECTS_DIR)
+        subprocess.run(["git", "commit", "-m", f"add {builder.project_name}"], cwd=AUTO_PROJECTS_DIR)
+        subprocess.run(["git", "push"], cwd=AUTO_PROJECTS_DIR)
+
         time.sleep(30)  # 项目间暂停加长，确保不过载
 
 
