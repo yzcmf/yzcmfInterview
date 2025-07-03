@@ -1,0 +1,1 @@
+❌ auto_project_14_mental_health_consulting_system 构建失败: [Errno 2] No such file or directory: 'vercel'
