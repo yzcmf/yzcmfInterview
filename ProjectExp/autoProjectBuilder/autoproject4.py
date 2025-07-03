@@ -106,7 +106,7 @@ class AutoAppBuilder:
         elif re.search(r"\\bFlask|FastAPI|Python\\b", plan, re.IGNORECASE):
             self.backend = "python"
         else:
-            self.backend = "nextjs"
+            self.backend = "python"
         print(f"✅ 架构规划完成 (后端语言: {self.backend})\n")
         return plan
 
@@ -187,7 +187,7 @@ class AutoAppBuilder:
         print("🧠 打开项目到 Cursor IDE...")
         os.system(f"open -a Cursor {self.full_path}")
 
-    def deploy(self, deploy_choice="135"):
+    def deploy(self, deploy_choice="345"):
         print("🚀 正在部署平台: " + deploy_choice)
         os.chdir(self.full_path)
         if "1" in deploy_choice:
@@ -217,7 +217,7 @@ def run_builder(builder):
         builder.generate_mermaid_svg()
         builder.upload_to_github()
         builder.open_cursor()
-        builder.deploy(deploy_choice="135")
+        builder.deploy(deploy_choice="345")
         with open("log.txt", "a") as log:
             log.write(f"✅ {builder.project_name} 构建成功\n")
     except Exception as e:
@@ -265,23 +265,23 @@ def run_batch(prompt_list):
         print(f"🚧 正在处理第 {i+1}/{len(prompt_list)} 个项目: {builder.project_name}")
         run_builder(builder)
 
-        # ✅ 修复 README.md 被覆盖为 autogen 的逻辑
-        project_path = os.path.join(AUTO_PROJECTS_DIR, builder.project_name)
-        readme_md = os.path.join(project_path, "README.md")
-        readme_autogen = os.path.join(project_path, "README.autogen.md")
-        if os.path.exists(readme_md):
-            if not os.path.exists(readme_autogen):
-                os.rename(readme_md, readme_autogen)
-                print(f"📄 README.md 已重命名为 README.autogen.md → 保留 AI 输出")
-            else:
-                print(f"⚠️ 检测到已有 README.autogen.md，保留两者")
-
-        # ✅ 每轮生成后自动提交并推送到 autogen 分支
-        subprocess.run(["git", "add", "."], cwd=AUTO_PROJECTS_DIR)
-        subprocess.run(["git", "commit", "-m", f"add {builder.project_name}"], cwd=AUTO_PROJECTS_DIR)
-        subprocess.run(["git", "push"], cwd=AUTO_PROJECTS_DIR)
-
-        time.sleep(30)  # 项目间暂停加长，确保不过载
+        # # ✅ 修复 README.md 被覆盖为 autogen 的逻辑
+        # project_path = os.path.join(AUTO_PROJECTS_DIR, builder.project_name)
+        # readme_md = os.path.join(project_path, "README.md")
+        # readme_autogen = os.path.join(project_path, "README.autogen.md")
+        # if os.path.exists(readme_md):
+        #     if not os.path.exists(readme_autogen):
+        #         os.rename(readme_md, readme_autogen)
+        #         print(f"📄 README.md 已重命名为 README.autogen.md → 保留 AI 输出")
+        #     else:
+        #         print(f"⚠️ 检测到已有 README.autogen.md，保留两者")
+        #
+        # # ✅ 每轮生成后自动提交并推送到 autogen 分支
+        # subprocess.run(["git", "add", "."], cwd=AUTO_PROJECTS_DIR)
+        # subprocess.run(["git", "commit", "-m", f"add {builder.project_name}"], cwd=AUTO_PROJECTS_DIR)
+        # subprocess.run(["git", "push"], cwd=AUTO_PROJECTS_DIR)
+        #
+        # time.sleep(30)  # 项目间暂停加长，确保不过载
 
 
 # 示例触发
