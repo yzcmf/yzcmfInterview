@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ../frontends
+      dockerfile: fastapi-react/Dockerfile
+    container_name: fastapi-react-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    networks:
+      - fastapi-react-network
+
+  backend:
+    build:
+      context: ../backends
+      dockerfile: fastapi-react/Dockerfile
+    container_name: fastapi-react-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/modular-app
+    depends_on:
+      - postgres
+    networks:
+      - fastapi-react-network
+
+  postgres:
+    image: postgres:15
+    container_name: fastapi-react-postgres
+    environment:
+      POSTGRES_DB: modular-app
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - fastapi-react_postgres_data:/var/lib/postgresql/data
+    networks:
+      - fastapi-react-network
+
+volumes:
+  fastapi-react_postgres_data:
+
+networks:
+  fastapi-react-network:
+    driver: bridge

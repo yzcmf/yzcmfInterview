@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ../frontends
+      dockerfile: t3/Dockerfile
+    container_name: t3-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    networks:
+      - t3-network
+
+  backend:
+    build:
+      context: ../backends
+      dockerfile: t3/Dockerfile
+    container_name: t3-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/modular-app
+    depends_on:
+      - postgres
+    networks:
+      - t3-network
+
+  postgres:
+    image: postgres:15
+    container_name: t3-postgres
+    environment:
+      POSTGRES_DB: modular-app
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - t3_postgres_data:/var/lib/postgresql/data
+    networks:
+      - t3-network
+
+volumes:
+  t3_postgres_data:
+
+networks:
+  t3-network:
+    driver: bridge

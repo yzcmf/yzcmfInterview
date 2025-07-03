@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15
+    container_name: modular-postgres
+    environment:
+      POSTGRES_DB: modular-app
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - modular-network
+
+  # MongoDB Database
+  mongodb:
+    image: mongo:6
+    container_name: modular-mongodb
+    environment:
+      MONGO_INITDB_DATABASE: modular-app
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - modular-network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: modular-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - modular-network
+
+volumes:
+  postgres_data:
+  mongodb_data:
+
+networks:
+  modular-network:
+    driver: bridge
