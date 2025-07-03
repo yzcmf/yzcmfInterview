@@ -13,39 +13,43 @@ V0_API_KEY = "v1:cYKn1h2r52mZsJhYPr48ua8u:9xudmHWnXcphqSunMXXBK51O"
 PROJECT_NAME = "interview_simulator"
 IDEA_PROMPT = "我想做一个AI面试模拟问答系统，上传简历后生成问题并评分"
 
-# === 客户端初始化（仅用 OpenRouter + DeepSeek） ===
-router_client = OpenAI(api_key=OPENROUTER_API_KEY, base_url="https://openrouter.ai/api/v1")
+# === 客户端初始化（OpenRouter + DeepSeek） ===
+client = OpenAI(api_key=OPENROUTER_API_KEY, base_url="https://openrouter.ai/api/v1")
 
 # === 通用对话函数（调用 DeepSeek） ===
 def call_chat(prompt):
-    msgs = [
+    messages = [
         {"role": "system", "content": "你是资深系统架构师，请将以下项目需求拆解为模块、推荐技术栈，并输出页面结构与接口设计。"},
         {"role": "user", "content": prompt}
     ]
-    resp = router_client.chat.completions.create(
+    response = client.chat.completions.create(
         model="deepseek/deepseek-r1:free",
-        extra_headers={"HTTP-Referer": "AutoBuilder", "X-Title": "AutoBuilder"},
-        messages=msgs
+        messages=messages,
+        extra_headers={
+            "HTTP-Referer": "AutoBuilder",
+            "X-Title": "AutoBuilder"
+        }
     )
-    return resp.choices[0].message.content
+    return response.choices[0].message.content
 
 # === Step 1: 架构分析 ===
 def get_project_architecture(prompt):
     print("📐 正在生成系统架构...")
     plan = call_chat(prompt)
     print("✅ 架构规划完成:\n", plan)
+    return plan
 
-    os.makedirs(PROJECT_NAME, exist_ok=True)
+# === 写入架构文档 ===
+def write_architecture_readme(architecture_text):
     readme_path = os.path.join(PROJECT_NAME, "README.autogen.md")
     try:
+        os.makedirs(PROJECT_NAME, exist_ok=True)
         with open(readme_path, "w", encoding="utf-8") as f:
             f.write("# 项目架构设计\n\n")
-            f.write(plan)
+            f.write(architecture_text)
         print("📄 架构已写入 README.autogen.md")
     except Exception as e:
         print(f"⚠️ 写入 README.autogen.md 失败: {e}")
-
-    return plan
 
 # === Step 2: V0.dev UI 页面生成 ===
 def generate_ui_pages_v0(pages):
@@ -116,6 +120,7 @@ if __name__ == "__main__":
     ui_code = generate_ui_pages_v0(pages_needed)
 
     scaffold_next_project(ui_code)
+    write_architecture_readme(architecture)
     open_in_cursor()
 
     print("请选择部署平台：")
