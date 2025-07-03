@@ -1,1 +1,0 @@
-❌ auto_project_1_friend_social_platform 构建失败: [Errno 2] No such file or directory: 'vercel'
