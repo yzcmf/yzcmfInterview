@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ../frontends
+      dockerfile: pern/Dockerfile
+    container_name: pern-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    networks:
+      - pern-network
+
+  backend:
+    build:
+      context: ../backends
+      dockerfile: pern/Dockerfile
+    container_name: pern-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/modular-app
+    depends_on:
+      - postgres
+    networks:
+      - pern-network
+
+  postgres:
+    image: postgres:15
+    container_name: pern-postgres
+    environment:
+      POSTGRES_DB: modular-app
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - pern_postgres_data:/var/lib/postgresql/data
+    networks:
+      - pern-network
+
+volumes:
+  pern_postgres_data:
+
+networks:
+  pern-network:
+    driver: bridge

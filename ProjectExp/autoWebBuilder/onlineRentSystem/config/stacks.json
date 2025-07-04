@@ -1,0 +1,337 @@
+{
+  "default": "mern",
+  "stacks": {
+    "mern": {
+      "name": "MERN Stack",
+      "description": "MongoDB, Express.js, React, Node.js",
+      "frontend": "react",
+      "backend": "nodejs",
+      "database": "mongodb",
+      "port": {
+        "frontend": 3000,
+        "backend": 5000,
+        "database": 27017
+      },
+      "env": {
+        "NODE_ENV": "development",
+        "DATABASE_URL": "mongodb://localhost:27017/modular-app"
+      }
+    },
+    "pern": {
+      "name": "PERN Stack", 
+      "description": "PostgreSQL, Express.js, React, Node.js",
+      "frontend": "react",
+      "backend": "nodejs", 
+      "database": "postgresql",
+      "port": {
+        "frontend": 3000,
+        "backend": 5000,
+        "database": 5432
+      },
+      "env": {
+        "NODE_ENV": "development",
+        "DATABASE_URL": "postgresql://postgres:password@localhost:5432/modular-app"
+      }
+    },
+    "t3": {
+      "name": "T3 Stack",
+      "description": "TypeScript, tRPC, Tailwind, Next.js",
+      "frontend": "nextjs",
+      "backend": "trpc",
+      "database": "postgresql",
+      "port": {
+        "frontend": 3000,
+        "backend": 3000,
+        "database": 5432
+      },
+      "env": {
+        "NODE_ENV": "development",
+        "DATABASE_URL": "postgresql://postgres:password@localhost:5432/modular-app"
+      }
+    },
+    "nextjs-fullstack": {
+      "name": "Next.js Fullstack",
+      "description": "Next.js with API Routes and PostgreSQL",
+      "frontend": "nextjs",
+      "backend": "nextjs",
+      "database": "postgresql",
+      "port": {
+        "frontend": 3000,
+        "backend": 3000,
+        "database": 5432
+      },
+      "env": {
+        "NODE_ENV": "development",
+        "DATABASE_URL": "postgresql://postgres:password@localhost:5432/modular-app"
+      }
+    },
+    "fastapi-react": {
+      "name": "FastAPI + React",
+      "description": "Python FastAPI backend with React frontend",
+      "frontend": "react",
+      "backend": "fastapi",
+      "database": "postgresql",
+      "port": {
+        "frontend": 3000,
+        "backend": 8000,
+        "database": 5432
+      },
+      "env": {
+        "NODE_ENV": "development",
+        "DATABASE_URL": "postgresql://postgres:password@localhost:5432/modular-app"
+      }
+    },
+    "spring-react": {
+      "name": "Spring Boot + React",
+      "description": "Java Spring Boot backend with React frontend",
+      "frontend": "react",
+      "backend": "springboot",
+      "database": "postgresql",
+      "port": {
+        "frontend": 3000,
+        "backend": 8080,
+        "database": 5432
+      },
+      "env": {
+        "NODE_ENV": "development",
+        "DATABASE_URL": "postgresql://postgres:password@localhost:5432/modular-app"
+      }
+    },
+    "vue-nuxt": {
+      "name": "Vue.js + Nuxt",
+      "description": "Vue.js with Nuxt.js fullstack",
+      "frontend": "vue",
+      "backend": "nuxt",
+      "database": "postgresql",
+      "port": {
+        "frontend": 3000,
+        "backend": 3000,
+        "database": 5432
+      },
+      "env": {
+        "NODE_ENV": "development",
+        "DATABASE_URL": "postgresql://postgres:password@localhost:5432/modular-app"
+      }
+    },
+    "sveltekit": {
+      "name": "SvelteKit",
+      "description": "SvelteKit fullstack with PostgreSQL",
+      "frontend": "svelte",
+      "backend": "svelte",
+      "database": "postgresql",
+      "port": {
+        "frontend": 5173,
+        "backend": 5173,
+        "database": 5432
+      },
+      "env": {
+        "NODE_ENV": "development",
+        "DATABASE_URL": "postgresql://postgres:password@localhost:5432/modular-app"
+      }
+    },
+    "astro-fullstack": {
+      "name": "Astro Fullstack",
+      "description": "Astro with SSR and PostgreSQL",
+      "frontend": "astro",
+      "backend": "astro",
+      "database": "postgresql",
+      "port": {
+        "frontend": 4321,
+        "backend": 4321,
+        "database": 5432
+      },
+      "env": {
+        "NODE_ENV": "development",
+        "DATABASE_URL": "postgresql://postgres:password@localhost:5432/modular-app"
+      }
+    },
+    "remix-fullstack": {
+      "name": "Remix Fullstack",
+      "description": "Remix with React and PostgreSQL",
+      "frontend": "remix",
+      "backend": "remix",
+      "database": "postgresql",
+      "port": {
+        "frontend": 3000,
+        "backend": 3000,
+        "database": 5432
+      },
+      "env": {
+        "NODE_ENV": "development",
+        "DATABASE_URL": "postgresql://postgres:password@localhost:5432/modular-app"
+      }
+    },
+    "solid-start": {
+      "name": "SolidStart",
+      "description": "SolidJS with SolidStart and PostgreSQL",
+      "frontend": "solid",
+      "backend": "solid",
+      "database": "postgresql",
+      "port": {
+        "frontend": 3000,
+        "backend": 3000,
+        "database": 5432
+      },
+      "env": {
+        "NODE_ENV": "development",
+        "DATABASE_URL": "postgresql://postgres:password@localhost:5432/modular-app"
+      }
+    }
+  },
+  "frontends": {
+    "react": {
+      "name": "React.js",
+      "framework": "react",
+      "language": "typescript",
+      "styling": "tailwind",
+      "state": "zustand",
+      "router": "react-router"
+    },
+    "nextjs": {
+      "name": "Next.js",
+      "framework": "nextjs",
+      "language": "typescript",
+      "styling": "tailwind",
+      "state": "zustand",
+      "router": "nextjs-router"
+    },
+    "vue": {
+      "name": "Vue.js",
+      "framework": "vue",
+      "language": "typescript",
+      "styling": "tailwind",
+      "state": "pinia",
+      "router": "vue-router"
+    },
+    "svelte": {
+      "name": "SvelteKit",
+      "framework": "sveltekit",
+      "language": "typescript",
+      "styling": "tailwind",
+      "state": "svelte-stores",
+      "router": "sveltekit-router"
+    },
+    "astro": {
+      "name": "Astro",
+      "framework": "astro",
+      "language": "typescript",
+      "styling": "tailwind",
+      "state": "nanostores",
+      "router": "astro-router"
+    },
+    "remix": {
+      "name": "Remix",
+      "framework": "remix",
+      "language": "typescript",
+      "styling": "tailwind",
+      "state": "remix-state",
+      "router": "remix-router"
+    },
+    "solid": {
+      "name": "SolidJS",
+      "framework": "solidstart",
+      "language": "typescript",
+      "styling": "tailwind",
+      "state": "solid-signals",
+      "router": "solid-router"
+    }
+  },
+  "backends": {
+    "nodejs": {
+      "name": "Node.js + Express",
+      "framework": "express",
+      "language": "typescript",
+      "orm": "prisma",
+      "auth": "jwt"
+    },
+    "nextjs": {
+      "name": "Next.js API Routes",
+      "framework": "nextjs",
+      "language": "typescript",
+      "orm": "prisma",
+      "auth": "nextauth"
+    },
+    "trpc": {
+      "name": "tRPC",
+      "framework": "trpc",
+      "language": "typescript",
+      "orm": "prisma",
+      "auth": "nextauth"
+    },
+    "fastapi": {
+      "name": "FastAPI",
+      "framework": "fastapi",
+      "language": "python",
+      "orm": "sqlalchemy",
+      "auth": "jwt"
+    },
+    "springboot": {
+      "name": "Spring Boot",
+      "framework": "spring",
+      "language": "java",
+      "orm": "jpa",
+      "auth": "spring-security"
+    },
+    "nuxt": {
+      "name": "Nuxt.js",
+      "framework": "nuxt",
+      "language": "typescript",
+      "orm": "prisma",
+      "auth": "nuxt-auth"
+    },
+    "svelte": {
+      "name": "SvelteKit",
+      "framework": "sveltekit",
+      "language": "typescript",
+      "orm": "prisma",
+      "auth": "svelte-auth"
+    },
+    "astro": {
+      "name": "Astro",
+      "framework": "astro",
+      "language": "typescript",
+      "orm": "prisma",
+      "auth": "astro-auth"
+    },
+    "remix": {
+      "name": "Remix",
+      "framework": "remix",
+      "language": "typescript",
+      "orm": "prisma",
+      "auth": "remix-auth"
+    },
+    "solid": {
+      "name": "SolidStart",
+      "framework": "solidstart",
+      "language": "typescript",
+      "orm": "prisma",
+      "auth": "solid-auth"
+    }
+  },
+  "databases": {
+    "postgresql": {
+      "name": "PostgreSQL",
+      "type": "sql",
+      "orm": "prisma",
+      "migration": "prisma-migrate"
+    },
+    "mongodb": {
+      "name": "MongoDB",
+      "type": "nosql",
+      "orm": "mongoose",
+      "migration": "manual"
+    },
+    "sqlite": {
+      "name": "SQLite",
+      "type": "sql",
+      "orm": "prisma",
+      "migration": "prisma-migrate"
+    },
+    "supabase": {
+      "name": "Supabase",
+      "type": "postgresql",
+      "orm": "supabase-client",
+      "migration": "supabase-migrate"
+    }
+  }
+} 
