@@ -62,7 +62,7 @@ def call_chat_direct(prompt, retries=3):
             "model": "deepseek/deepseek-r1:free",
             "messages": [
                 {"role": "system", "content": "你是资深系统架构师，请将以下项目需求拆解为模块、推荐技术栏，并输出页面结构与接口设计，同时输出 mermaid 格式系统组件图。"},
-                {"role": "user", "content": prompt}
+                {"role": "user", "content": "Write in details and specfic; Compare technology stack solutions based on user growth -- 1. How to quickly acquire customers 2. Traffic analysis and maintenance of old users 3. Cross platform 4. Module integration and code refactoring and migration, the top 3 best technology stack recommendations 5. overall technical and human costs vs revenue vs profit analysis, lower the cost optimization profit" + prompt}
             ]
         }
 
@@ -115,7 +115,16 @@ class AutoAppBuilder:
         print(readme_path)
         os.makedirs(self.full_path, exist_ok=True)
         with open(readme_path, "w", encoding="utf-8") as f:
-            f.write("# 项目架构设计\n\n")
+            f.write("\n # 项目架构要求\n")
+            f.write("\n # Compare technology stack solutions based on user growth \n" +
+                    "## 1. How to quickly acquire customers \n"  +
+                    "## 2. Traffic analysis and maintenance of old users \n"  +
+                    "## 3. Cross platform \n"  +
+                    "## 4. Module integration and code refactoring and migration, top 3 technical stack recommendation \n"  +
+                    "## 5. Technical and human costs vs revenue vs profit, lower the cost optimization profit \n")
+            f.write("\n # 项目收益设计 \n")
+            f.write("## Platform monetization + customer acquisition + user maintenance solutions \n")
+            f.write("\n # 项目架构设计\n")
             f.write(self.architecture)
             if os.path.exists(os.path.join(self.full_path, "architecture.svg")):
                 f.write("\n\n![系统架构图](architecture.svg)\n")
@@ -223,7 +232,7 @@ def run_builder(builder):
         print(f"❌ 项目 {builder.project_name} 构建失败: {e}")
         with open("log.txt", "a") as log:
             log.write(f"❌ {builder.project_name} 构建失败: {e}\n")
-def run_batch(prompt_list, skip_flag=True):
+def run_batch(prompt_list, update_flag=False):
     os.makedirs(AUTO_PROJECTS_DIR, exist_ok=True)
 
     # === 设置 Git 身份为 yzcmf，防止默认使用 yuxuanKaribu ===
@@ -261,7 +270,7 @@ def run_batch(prompt_list, skip_flag=True):
         project_name = f"auto_project_{i+1}_{name_part}"
         cwd_projects = os.listdir(AUTO_PROJECTS_DIR)
         print(project_name, cwd_projects, AUTO_PROJECTS_DIR)
-        if skip_flag and project_name in cwd_projects:
+        if not update_flag and project_name in cwd_projects:
             continue
         builder = AutoAppBuilder(project_name=project_name, idea_prompt=prompt)
         print(f"🚧 正在处理第 {i+1}/{len(prompt_list)} 个项目: {builder.project_name}")
@@ -284,7 +293,6 @@ def run_batch(prompt_list, skip_flag=True):
         # subprocess.run(["git", "push"], cwd=AUTO_PROJECTS_DIR)
         #
         # time.sleep(30)  # 项目间暂停加长，确保不过载
-
 
 # 示例触发
 if __name__ == "__main__":
@@ -331,5 +339,5 @@ if __name__ == "__main__":
         "I want to build an AI music recommendation system that creates personalized playlists and music suggestions based on preferences.",
         "I want to build an AI travel recommendation system that creates personalized itineraries and attraction suggestions based on travel preferences."
     ]
-    run_batch(P[:8], skip_flag=True)
-    run_batch(P[:8], skip_flag=False)
+    # run_batch(P[:8], update_flag=False)
+    run_batch(P[:1], update_flag=True)
