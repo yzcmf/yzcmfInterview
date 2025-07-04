@@ -26,7 +26,7 @@ V0_API_KEY = os.getenv("V0_API_KEY")
 # V0_API_KEY = "v1:cYKn1h2r52mZsJhYPr48ua8u:9xudmHWnXcphqSunMXXBK51O"
 
 # AUTO_PROJECTS_DIR = "auto_projects"
-AUTO_PROJECTS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../yzcmfInterview/ProjectExp/autoProjectBuilder/autoProject"))
+AUTO_PROJECTS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../yzcmfInterview/ProjectExp/autoProjectBuilder/autoProject"))
 GITHUB_REPO = "git@github.com:yzcmf/yzcmfInterview.git"  # 🚀 改为 SSH 方式
 
 OPENROUTER_KEYS = [
@@ -215,7 +215,7 @@ def run_builder(builder):
         builder.write_code()
         builder.generate_figma_json()
         builder.generate_mermaid_svg()
-        builder.upload_to_github()
+        # builder.upload_to_github()
         builder.open_cursor()
         builder.deploy(deploy_choice="345")
         with open("log.txt", "a") as log:
@@ -230,33 +230,33 @@ def run_batch(prompt_list):
     os.makedirs(AUTO_PROJECTS_DIR, exist_ok=True)
 
     # === 设置 Git 身份为 yzcmf，防止默认使用 yuxuanKaribu ===
-    subprocess.run(["git", "config", "--global", "user.name", "yzcmf"])
-    subprocess.run(["git", "config", "--global", "user.email", "yzcmf@example.com"])
-
-    # 初始化 Git 仓库
-    if not os.path.exists(os.path.join(AUTO_PROJECTS_DIR, ".git")):
-        subprocess.run(["git", "init"], cwd=AUTO_PROJECTS_DIR)
-        subprocess.run(["git", "remote", "add", "origin", GITHUB_REPO], cwd=AUTO_PROJECTS_DIR)
-        subprocess.run(["git", "fetch", "origin"], cwd=AUTO_PROJECTS_DIR)
-        subprocess.run(["git", "checkout", "-b", "yzcmf", "origin/yzcmf"], cwd=AUTO_PROJECTS_DIR)
-
-    # 🚀 强制使用 SSH 地址，避免因 token 权限导致 403
-    subprocess.run(["git", "remote", "set-url", "origin", GITHUB_REPO], cwd=AUTO_PROJECTS_DIR)
-
-    # ✅ run_batch 内添加一个标志变量 only_delete_once，确保只删一次远程 autogen
-    only_delete_once = True
-
-    # ✅ 删除远程 autogen 分支（只删一次）
-    if only_delete_once:
-        # 如果 autogen 分支存在，先删除
-        result = subprocess.run(["git", "ls-remote", "--heads", "origin", "autogen"], capture_output=True, text=True)
-        if result.stdout.strip():
-            subprocess.run(["git", "push", "origin", "--delete", "autogen"], cwd=AUTO_PROJECTS_DIR)
-            only_delete_once = False
-
-    # 创建 autogen 分支并推送
-    subprocess.run(["git", "checkout", "-b", "autogen"], cwd=AUTO_PROJECTS_DIR)
-    subprocess.run(["git", "push", "--set-upstream", "origin", "autogen"], cwd=AUTO_PROJECTS_DIR)
+    # subprocess.run(["git", "config", "--global", "user.name", "yzcmf"])
+    # subprocess.run(["git", "config", "--global", "user.email", "yzcmf@example.com"])
+    #
+    # # 初始化 Git 仓库
+    # if not os.path.exists(os.path.join(AUTO_PROJECTS_DIR, ".git")):
+    #     subprocess.run(["git", "init"], cwd=AUTO_PROJECTS_DIR)
+    #     subprocess.run(["git", "remote", "add", "origin", GITHUB_REPO], cwd=AUTO_PROJECTS_DIR)
+    #     subprocess.run(["git", "fetch", "origin"], cwd=AUTO_PROJECTS_DIR)
+    #     subprocess.run(["git", "checkout", "-b", "yzcmf", "origin/yzcmf"], cwd=AUTO_PROJECTS_DIR)
+    #
+    # # 🚀 强制使用 SSH 地址，避免因 token 权限导致 403
+    # subprocess.run(["git", "remote", "set-url", "origin", GITHUB_REPO], cwd=AUTO_PROJECTS_DIR)
+    #
+    # # ✅ run_batch 内添加一个标志变量 only_delete_once，确保只删一次远程 autogen
+    # only_delete_once = True
+    #
+    # # ✅ 删除远程 autogen 分支（只删一次）
+    # if only_delete_once:
+    #     # 如果 autogen 分支存在，先删除
+    #     result = subprocess.run(["git", "ls-remote", "--heads", "origin", "autogen"], capture_output=True, text=True)
+    #     if result.stdout.strip():
+    #         subprocess.run(["git", "push", "origin", "--delete", "autogen"], cwd=AUTO_PROJECTS_DIR)
+    #         only_delete_once = False
+    #
+    # # 创建 autogen 分支并推送
+    # subprocess.run(["git", "checkout", "-b", "autogen"], cwd=AUTO_PROJECTS_DIR)
+    # subprocess.run(["git", "push", "--set-upstream", "origin", "autogen"], cwd=AUTO_PROJECTS_DIR)
 
     print("📦 开始顺序构建项目（共 {} 个）...".format(len(prompt_list)))
     for i, prompt in enumerate(prompt_list):
@@ -293,7 +293,6 @@ if __name__ == "__main__":
         "我想做一个AI租房房东租户交租系统，第三方平台代保管押金、同时能够管理租金和合同信息"
     ]
     # run_batch(prompts)
-
     prompts_detail = [
         "我想做一个AI简历打分系统，给出优化建议并生成岗位匹配图",
         "我想做一个AI智能客服系统，能够自动回答常见问题并提供个性化服务",
@@ -309,9 +308,7 @@ if __name__ == "__main__":
         "我想做一个AI音乐推荐系统，上传音乐偏好后生成个性化歌单和音乐推荐",
         "我想做一个AI旅游推荐系统，上传旅行偏好后生成个性化行程和景点推荐"
     ]
-
     # run_batch(prompts + prompts_detail)
-
     P = [
         "I want to build an AI friend social platform that generates personalized matches and enables interactive socializing after uploading profile data.",
         "I want to build an AI job search platform that generates personalized job matches and interview prep tips based on uploaded resumes.",
@@ -331,5 +328,4 @@ if __name__ == "__main__":
         "I want to build an AI music recommendation system that creates personalized playlists and music suggestions based on preferences.",
         "I want to build an AI travel recommendation system that creates personalized itineraries and attraction suggestions based on travel preferences."
     ]
-
-    run_batch(P)
+    run_batch(P[:1])
