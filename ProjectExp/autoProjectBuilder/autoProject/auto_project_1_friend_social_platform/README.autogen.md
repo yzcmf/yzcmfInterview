@@ -2,12 +2,12 @@
 
 ## 📋 1. 项目概述
 
-### Compare technology stack solutions based on user growth 
-### 1. How to quickly acquire customers 
-### 2. Traffic analysis and maintenance of old users 
-### 3. Cross platform 
-### 4. Module integration and code refactoring and migration, top 3 technical stack recommendation 
-### 5. Technical and human costs vs revenue vs profit, lower the cost optimization profit 
+ # Compare technology stack solutions based on user growth 
+## 1. How to quickly acquire customers 
+## 2. Traffic analysis and maintenance of old users 
+## 3. Cross platform 
+## 4. Module integration and code refactoring and migration, top 3 technical stack recommendation 
+## 5. Technical and human costs vs revenue vs profit, lower the cost optimization profit 
 
 ### 项目目标
 - 构建智能化的朋友匹配系统
