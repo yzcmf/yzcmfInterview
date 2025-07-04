@@ -115,14 +115,16 @@ class AutoAppBuilder:
         print(readme_path)
         os.makedirs(self.full_path, exist_ok=True)
         with open(readme_path, "w", encoding="utf-8") as f:
-            f.write("# 项目架构设计\n\n")
             f.write("# Compare technology stack solutions based on user growth \n" +
                     "## 1. How to quickly acquire customers \n"  +
                     "## 2. Traffic analysis and maintenance of old users \n"  +
                     "## 3. Cross platform \n"  +
                     "## 4. Module integration and code refactoring and migration, top 3 technical stack recommendation \n"  +
                     "## 5. Technical and human costs vs revenue vs profit, lower the cost optimization profit \n")
+            f.write("# 项目架构设计\n\n")
             f.write(self.architecture)
+            f.write("# \n项目收益\n\n")
+            f.write("## Platform monetization + customer acquisition + user maintenance solutions \n")
             if os.path.exists(os.path.join(self.full_path, "architecture.svg")):
                 f.write("\n\n![系统架构图](architecture.svg)\n")
         print("📄 架构已写入 README.autogen.md")
