@@ -1,22 +1,16 @@
-import { AuthRequest } from "../types";
 import { Request, Response } from 'express';
 import { logger } from '../utils/logger';
-import { AuthRequest } from '../middleware/auth';
 
 export const userController = {
   // 获取用户资料
-  async getProfile(req: AuthRequest, res: Response) {
+  async getProfile(_req: Request, res: Response) {
     try {
-      const userId = req.user?.id;
-
-      // 这里应该从数据库获取用户资料
-      // 暂时返回模拟数据
       res.json({
         success: true,
         data: {
           user: {
-            id: userId,
-            email: req.user?.email,
+            id: (_req as any).user?.id,
+            email: (_req as any).user?.email,
             username: 'username',
             firstName: 'John',
             lastName: 'Doe',
@@ -47,10 +41,10 @@ export const userController = {
   },
 
   // 更新用户资料
-  async updateProfile(req: AuthRequest, res: Response) {
+  async updateProfile(_req: Request, res: Response) {
     try {
-      const userId = req.user?.id;
-      const updateData = req.body;
+      const userId = (_req as any).user?.id;
+      const updateData = (_req as any).body;
 
       // 这里应该更新数据库中的用户资料
       res.json({
@@ -75,10 +69,10 @@ export const userController = {
   },
 
   // 上传头像
-  async uploadAvatar(req: AuthRequest, res: Response) {
+  async uploadAvatar(_req: Request, res: Response) {
     try {
-      const userId = req.user?.id;
-      const file = req.file;
+      const userId = (_req as any).user?.id;
+      const file = (_req as any).file;
 
       // 这里应该处理文件上传
       res.json({
@@ -99,9 +93,9 @@ export const userController = {
   },
 
   // 发现用户
-  async discoverUsers(req: AuthRequest, res: Response) {
+  async discoverUsers(_req: Request, res: Response) {
     try {
-      const { page = 1, limit = 20, distance, ageMin, ageMax } = req.query;
+      const { page = 1, limit = 20, distance, ageMin, ageMax } = (_req as any).query;
 
       // 这里应该从数据库获取推荐用户
       // 暂时返回模拟数据
@@ -144,9 +138,9 @@ export const userController = {
   },
 
   // 获取用户详情
-  async getUserById(req: AuthRequest, res: Response) {
+  async getUserById(_req: Request, res: Response) {
     try {
-      const { userId } = req.params;
+      const { userId } = (_req as any).params;
 
       // 这里应该从数据库获取指定用户详情
       res.json({
@@ -176,10 +170,10 @@ export const userController = {
   },
 
   // 更新用户偏好
-  async updatePreferences(req: AuthRequest, res: Response) {
+  async updatePreferences(_req: Request, res: Response) {
     try {
-      const userId = req.user?.id;
-      const preferences = req.body;
+      const userId = (_req as any).user?.id;
+      const preferences = (_req as any).body;
 
       // 这里应该更新数据库中的用户偏好
       res.json({
@@ -203,9 +197,9 @@ export const userController = {
   },
 
   // 获取用户统计
-  async getUserStats(req: AuthRequest, res: Response) {
+  async getUserStats(_req: Request, res: Response) {
     try {
-      const userId = req.user?.id;
+      const userId = (_req as any).user?.id;
 
       // 这里应该从数据库获取用户统计数据
       res.json({
@@ -231,9 +225,9 @@ export const userController = {
   },
 
   // 删除账户
-  async deleteAccount(req: AuthRequest, res: Response) {
+  async deleteAccount(_req: Request, res: Response) {
     try {
-      const userId = req.user?.id;
+      const userId = (_req as any).user?.id;
 
       // 这里应该删除用户账户
       res.json({
