@@ -1,0 +1,67 @@
+{
+  "name": "friend-social-platform",
+  "version": "1.0.0",
+  "description": "智能化的朋友匹配社交平台",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend",
+    "chat-service",
+    "shared"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\" \"npm run dev:ai\" \"npm run dev:chat\"",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:ai": "cd ai-service && python -m uvicorn app:app --reload --port 8001",
+    "dev:chat": "cd chat-service && npm run dev",
+    "build": "npm run build:frontend && npm run build:backend && npm run build:chat",
+    "build:frontend": "cd frontend && npm run build",
+    "build:backend": "cd backend && npm run build",
+    "build:chat": "cd chat-service && npm run build",
+    "test": "npm run test:frontend && npm run test:backend && npm run test:ai",
+    "test:frontend": "cd frontend && npm test",
+    "test:backend": "cd backend && npm test",
+    "test:ai": "cd ai-service && pytest",
+    "lint": "npm run lint:frontend && npm run lint:backend && npm run lint:chat",
+    "lint:frontend": "cd frontend && npm run lint",
+    "lint:backend": "cd backend && npm run lint",
+    "lint:chat": "cd chat-service && npm run lint",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "setup": "npm install && cd frontend && npm install && cd ../backend && npm install && cd ../chat-service && npm install && cd ../ai-service && pip install -r requirements.txt",
+    "db:migrate": "cd backend && npm run db:migrate",
+    "db:seed": "cd backend && npm run db:seed",
+    "db:reset": "cd backend && npm run db:reset"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "prettier": "^3.1.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "keywords": [
+    "social",
+    "matching",
+    "ai",
+    "friendship",
+    "platform"
+  ],
+  "author": "Your Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/friend-social-platform.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-org/friend-social-platform/issues"
+  },
+  "homepage": "https://github.com/your-org/friend-social-platform#readme"
+} 
