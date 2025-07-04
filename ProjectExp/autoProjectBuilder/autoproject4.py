@@ -26,7 +26,8 @@ V0_API_KEY = os.getenv("V0_API_KEY")
 # V0_API_KEY = "v1:cYKn1h2r52mZsJhYPr48ua8u:9xudmHWnXcphqSunMXXBK51O"
 
 # AUTO_PROJECTS_DIR = "auto_projects"
-AUTO_PROJECTS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../yzcmfInterview/ProjectExp/autoProjectBuilder/autoProject"))
+AUTO_PROJECTS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../yzcmfInterview/ProjectExp/autoProjectBuilder/autoProject"))
+print(AUTO_PROJECTS_DIR)
 GITHUB_REPO = "git@github.com:yzcmf/yzcmfInterview.git"  # 🚀 改为 SSH 方式
 
 OPENROUTER_KEYS = [
@@ -85,7 +86,6 @@ def call_chat_direct(prompt, retries=3):
             time.sleep(10)
 
     raise Exception("🚫 所有重试次数已用完，构建失败。")
-
 class AutoAppBuilder:
     def __init__(self, project_name, idea_prompt):
         self.project_name = project_name
@@ -206,27 +206,24 @@ class AutoAppBuilder:
         if deploy_choice.strip() == "0":
             print("🛑 已跳过部署阶段")
 
-
 def run_builder(builder):
     try:
         builder.get_architecture()
         builder.write_readme()
-        builder.generate_ui()
+        # builder.generate_ui()
         builder.write_code()
-        builder.generate_figma_json()
-        builder.generate_mermaid_svg()
+        # builder.generate_figma_json()
+        # builder.generate_mermaid_svg()
         # builder.upload_to_github()
         builder.open_cursor()
-        builder.deploy(deploy_choice="345")
+        # builder.deploy(deploy_choice="345")
         with open("log.txt", "a") as log:
             log.write(f"✅ {builder.project_name} 构建成功\n")
     except Exception as e:
         print(f"❌ 项目 {builder.project_name} 构建失败: {e}")
         with open("log.txt", "a") as log:
             log.write(f"❌ {builder.project_name} 构建失败: {e}\n")
-
-
-def run_batch(prompt_list):
+def run_batch(prompt_list, skip_flag=True):
     os.makedirs(AUTO_PROJECTS_DIR, exist_ok=True)
 
     # === 设置 Git 身份为 yzcmf，防止默认使用 yuxuanKaribu ===
@@ -261,7 +258,12 @@ def run_batch(prompt_list):
     print("📦 开始顺序构建项目（共 {} 个）...".format(len(prompt_list)))
     for i, prompt in enumerate(prompt_list):
         name_part = '_'.join(prompt.split("that ")[0].split("AI ")[1].split(" ")[:-1]) if "AI " in prompt else f"project_{i+1}"
-        builder = AutoAppBuilder(project_name=f"auto_project_{i+1}_{name_part}", idea_prompt=prompt)
+        project_name = f"auto_project_{i+1}_{name_part}"
+        cwd_projects = os.listdir(AUTO_PROJECTS_DIR)
+        print(project_name, cwd_projects, AUTO_PROJECTS_DIR)
+        if skip_flag and project_name in cwd_projects:
+            continue
+        builder = AutoAppBuilder(project_name=project_name, idea_prompt=prompt)
         print(f"🚧 正在处理第 {i+1}/{len(prompt_list)} 个项目: {builder.project_name}")
         run_builder(builder)
 
@@ -313,11 +315,12 @@ if __name__ == "__main__":
         "I want to build an AI friend social platform that generates personalized matches and enables interactive socializing after uploading profile data.",
         "I want to build an AI job search platform that generates personalized job matches and interview prep tips based on uploaded resumes.",
         "I want to build an AI rental platform that for landlords and tenants, where a third-party platform manages deposits, rent tracking, and contract information.",
-        "I want to build an AI VPN platform that helping chinese to connect to Google and ChatGPT",
-        "I want to build an AI health life system that generates personalized health advice and workout plans from uploaded health data.",
-        "I want to build an AI business develop platform that exchange service and products.",
+        "I want to build an AI vpn platform that helping chinese to connect to Google and ChatGPT",
+        "I want to build an AI auto code system that create fullstack application with just user's word decription.",
         "I want to build an AI deepfake detection system that auto detect the fake AI artifact nowadays.",
-        "I want to build an AI learning system that creates personalized study plans and summarizes key concepts from uploaded course materials.",
+        "I want to build an AI business develop platform that exchange service and products.",
+        "I want to build an AI health life system that generates personalized health advice and workout plans from uploaded health data.",
+         "I want to build an AI learning system that creates personalized study plans and summarizes key concepts from uploaded course materials.",
         "I want to build an AI resume scoring system that gives optimization suggestions and generates job match graphs.",
         "I want to build an AI smart customer service system that automatically answers FAQs and provides personalized support.",
         "I want to build an AI movie recommendation system that generates personalized movie recommendations and reviews based on viewing preferences.",
@@ -328,4 +331,5 @@ if __name__ == "__main__":
         "I want to build an AI music recommendation system that creates personalized playlists and music suggestions based on preferences.",
         "I want to build an AI travel recommendation system that creates personalized itineraries and attraction suggestions based on travel preferences."
     ]
-    run_batch(P[:1])
+    run_batch(P[:8], skip_flag=True)
+    run_batch(P[:8], skip_flag=False)
