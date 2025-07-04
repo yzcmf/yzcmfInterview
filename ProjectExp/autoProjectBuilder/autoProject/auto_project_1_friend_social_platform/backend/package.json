@@ -4,6 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "nodemon --exec ts-node src/server.ts",
+    "dev:port-cast": "ts-node src/server.ts",
+    "test:port-casting": "ts-node src/scripts/test-port-casting.ts",
+    "demo:port-casting": "ts-node src/scripts/demo-port-casting.ts",
     "build": "tsc",
     "start": "node dist/server.js",
     "lint": "eslint src --ext .ts",

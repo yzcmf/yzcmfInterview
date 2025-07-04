@@ -1,13 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    appDir: true,
     serverComponentsExternalPackages: ['@prisma/client'],
   },
   
   // 环境变量
   env: {
-    CUSTOM_KEY: process.env.CUSTOM_KEY,
+    CUSTOM_KEY: process.env.CUSTOM_KEY || 'default-key',
   },
   
   // 图片优化
@@ -99,7 +98,7 @@ const nextConfig = {
   i18n: {
     locales: ['en', 'zh', 'ja'],
     defaultLocale: 'en',
-    localeDetection: true,
+    localeDetection: false,
   },
   
   // 性能监控
