@@ -3,8 +3,9 @@
 import { useState, useEffect } from "react"
 import { UserCard } from "@/components/discover/user-card"
 import { Button } from "@/components/ui/button"
-import { Heart, X, Zap, RotateCcw } from "lucide-react"
+import { Heart, X, Zap, RotateCcw, Loader2 } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import { apiService } from "@/lib/api"
 
 interface User {
   id: string
@@ -64,24 +65,96 @@ export function DiscoverInterface() {
   const [users, setUsers] = useState<User[]>([])
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isAnimating, setIsAnimating] = useState(false)
+  const [loading, setLoading] = useState(true)
   const { toast } = useToast()
 
   useEffect(() => {
-    setUsers(mockUsers)
+    loadUsers()
   }, [])
+
+  const loadUsers = async () => {
+    try {
+      setLoading(true)
+      
+      // First try to get AI-powered matches
+      try {
+        const aiResponse = await apiService.findMatches("current-user", {
+          ageRange: { min: 25, max: 35 },
+          distance: 50,
+          interests: ["travel", "music", "sports"]
+        })
+        
+        if (aiResponse.matches && aiResponse.matches.length > 0) {
+          const aiUsers = aiResponse.matches.map((match: any) => ({
+            id: match.user_id,
+            name: match.name,
+            age: match.age,
+            bio: `Compatibility: ${Math.round(match.compatibility_score * 100)}%`,
+            photos: ["/placeholder.svg?height=400&width=300"],
+            interests: ["AI Matched"],
+            location: match.location,
+            compatibility: Math.round(match.compatibility_score * 100),
+          }))
+          setUsers(aiUsers)
+          return
+        }
+      } catch (error) {
+        console.log('AI service not available, falling back to regular discovery')
+      }
+
+      // Fallback to regular user discovery
+      const response = await apiService.discoverUsers(1, 20)
+      if (response.success && response.data.users) {
+        const discoveredUsers = response.data.users.map((user: any) => ({
+          id: user.id,
+          name: `${user.firstName} ${user.lastName}`,
+          age: user.age || 25,
+          bio: user.bio || "No bio available",
+          photos: [user.avatar || "/placeholder.svg?height=400&width=300"],
+          interests: Array.isArray(user.interests) ? user.interests : [],
+          location: user.location || "Unknown",
+          compatibility: Math.round((user.compatibilityScore || 0.5) * 100),
+        }))
+        setUsers(discoveredUsers)
+      } else {
+        // Fallback to mock data if API fails
+        setUsers(mockUsers)
+      }
+    } catch (error) {
+      console.error('Error loading users:', error)
+      toast({
+        title: "Error",
+        description: "Failed to load users. Using demo data.",
+        variant: "destructive",
+      })
+      setUsers(mockUsers)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const currentUser = users[currentIndex]
 
-  const handleSwipe = (direction: "left" | "right") => {
+  const handleSwipe = async (direction: "left" | "right") => {
     if (isAnimating || !currentUser) return
 
     setIsAnimating(true)
 
     if (direction === "right") {
-      toast({
-        title: "It's a match! 💕",
-        description: `You liked ${currentUser.name}`,
-      })
+      try {
+        // Send like to backend
+        await apiService.likeUser(currentUser.id)
+        toast({
+          title: "It's a match! 💕",
+          description: `You liked ${currentUser.name}`,
+        })
+      } catch (error) {
+        console.error('Error liking user:', error)
+        toast({
+          title: "Liked! 💕",
+          description: `You liked ${currentUser.name}`,
+        })
+      }
     }
 
     setTimeout(() => {
@@ -107,7 +180,19 @@ export function DiscoverInterface() {
 
   const resetStack = () => {
     setCurrentIndex(0)
-    setUsers([...mockUsers])
+    loadUsers()
+  }
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center h-96 space-y-4">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-purple-600" />
+          <h3 className="text-xl font-semibold mb-2">Loading matches...</h3>
+          <p className="text-muted-foreground">Finding the perfect matches for you</p>
+        </div>
+      </div>
+    )
   }
 
   if (!currentUser) {
