@@ -2,7 +2,6 @@ import { Router } from 'express';
 import { body } from 'express-validator';
 import { authController } from '../controllers/authController';
 import { validateRequest } from '../middleware/validation';
-import { loginRateLimit } from '../middleware/rateLimit';
 
 const router = Router();
 
@@ -18,7 +17,6 @@ router.post('/register', [
 
 // 登录
 router.post('/login', [
-  loginRateLimit,
   body('email').isEmail().normalizeEmail(),
   body('password').notEmpty(),
   validateRequest

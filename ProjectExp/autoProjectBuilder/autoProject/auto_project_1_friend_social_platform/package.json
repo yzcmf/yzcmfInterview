@@ -39,9 +39,9 @@
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
-    "prettier": "^3.1.0",
     "husky": "^8.0.3",
-    "lint-staged": "^15.2.0"
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.1.0"
   },
   "engines": {
     "node": ">=18.0.0",
@@ -63,5 +63,9 @@
   "bugs": {
     "url": "https://github.com/your-org/friend-social-platform/issues"
   },
-  "homepage": "https://github.com/your-org/friend-social-platform#readme"
-} 
+  "homepage": "https://github.com/your-org/friend-social-platform#readme",
+  "dependencies": {
+    "lucide-react": "^0.525.0",
+    "next-themes": "^0.4.6"
+  }
+}

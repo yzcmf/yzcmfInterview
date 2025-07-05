@@ -16,8 +16,8 @@ import analyticsRoutes from './routes/analytics';
 
 // 导入中间件
 import { errorHandler } from './middleware/errorHandler';
+import { createRateLimitMiddleware, createLoginRateLimit } from './middleware/rateLimit';
 // import { authMiddleware } from './middleware/auth';
-// import { apiRateLimit } from './middleware/rateLimit';
 
 // 导入配置
 import { connectDatabase } from './config/database';
@@ -52,8 +52,9 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('combined', { stream: { write: (message) => logger.info(message.trim()) } }));
 
-// 速率限制
-// app.use(apiRateLimit);
+// 速率限制中间件（在Redis连接后注册）
+app.use(createRateLimitMiddleware());
+app.use('/api/auth/login', createLoginRateLimit());
 
 // 健康检查
 app.get('/health', (_req, res) => {
