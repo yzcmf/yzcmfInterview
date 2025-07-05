@@ -3,7 +3,7 @@ import express from 'express';
 const router = express.Router();
 
 // 获取聊天历史
-router.get('/:matchId', (req, res) => {
+router.get('/:matchId', (_req, res) => {
   res.json({
     success: true,
     data: {

@@ -71,9 +71,6 @@ export const userController = {
   // 上传头像
   async uploadAvatar(_req: Request, res: Response) {
     try {
-      const userId = (_req as any).user?.id;
-      const file = (_req as any).file;
-
       // 这里应该处理文件上传
       res.json({
         success: true,
@@ -95,7 +92,7 @@ export const userController = {
   // 发现用户
   async discoverUsers(_req: Request, res: Response) {
     try {
-      const { page = 1, limit = 20, distance, ageMin, ageMax } = (_req as any).query;
+      const { page = 1, limit = 20 } = (_req as any).query;
 
       // 这里应该从数据库获取推荐用户
       // 暂时返回模拟数据
@@ -172,7 +169,6 @@ export const userController = {
   // 更新用户偏好
   async updatePreferences(_req: Request, res: Response) {
     try {
-      const userId = (_req as any).user?.id;
       const preferences = (_req as any).body;
 
       // 这里应该更新数据库中的用户偏好
@@ -199,8 +195,6 @@ export const userController = {
   // 获取用户统计
   async getUserStats(_req: Request, res: Response) {
     try {
-      const userId = (_req as any).user?.id;
-
       // 这里应该从数据库获取用户统计数据
       res.json({
         success: true,
@@ -227,8 +221,6 @@ export const userController = {
   // 删除账户
   async deleteAccount(_req: Request, res: Response) {
     try {
-      const userId = (_req as any).user?.id;
-
       // 这里应该删除用户账户
       res.json({
         success: true,

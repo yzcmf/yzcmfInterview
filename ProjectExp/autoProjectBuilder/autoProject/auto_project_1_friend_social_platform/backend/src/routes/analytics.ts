@@ -3,7 +3,7 @@ import express from 'express';
 const router = express.Router();
 
 // 获取用户统计数据
-router.get('/user-stats', (req, res) => {
+router.get('/user-stats', (_req, res) => {
   res.json({
     success: true,
     data: {
@@ -16,7 +16,7 @@ router.get('/user-stats', (req, res) => {
 });
 
 // 获取平台统计数据
-router.get('/platform-stats', (req, res) => {
+router.get('/platform-stats', (_req, res) => {
   res.json({
     success: true,
     data: {

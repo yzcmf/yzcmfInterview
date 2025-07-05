@@ -1,7 +1,8 @@
 import rateLimit from 'express-rate-limit';
 import { getRedis } from '../config/redis';
 
-const RedisStore = require('rate-limit-redis');
+const RedisStoreModule = require('rate-limit-redis');
+const RedisStore = RedisStoreModule.default || RedisStoreModule;
 
 export function createRateLimitMiddleware() {
   const redis = getRedis();

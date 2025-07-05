@@ -1,15 +1,11 @@
 import { AuthRequest } from "../types";
 import { Request, Response } from 'express';
 import { logger } from '../utils/logger';
-import { AuthRequest } from '../middleware/auth';
 
 export const matchController = {
   // 获取推荐用户
-  async getSuggestions(req: AuthRequest, res: Response) {
+  async getSuggestions(_req: Request, res: Response) {
     try {
-      const userId = req.user?.id;
-      const { limit = 10 } = req.query;
-
       // 这里应该调用AI服务获取推荐
       const suggestions = [
         {
@@ -46,14 +42,12 @@ export const matchController = {
   },
 
   // 喜欢用户
-  async likeUser(req: AuthRequest, res: Response) {
+  async likeUser(req: Request, res: Response) {
     try {
-      const userId = req.user?.id;
-      const { targetUserId } = req.body;
-
       // 这里应该处理喜欢逻辑并检查是否匹配
       const isMatch = Math.random() > 0.7; // 模拟匹配概率
-
+      const userId = (req as AuthRequest).user?.id;
+      const targetUserId = req.body.targetUserId;
       if (isMatch) {
         res.json({
           success: true,
@@ -87,11 +81,8 @@ export const matchController = {
   },
 
   // 跳过用户
-  async passUser(req: AuthRequest, res: Response) {
+  async passUser(_req: Request, res: Response) {
     try {
-      const userId = req.user?.id;
-      const { targetUserId } = req.body;
-
       // 这里应该处理跳过逻辑
       res.json({
         success: true,
@@ -108,10 +99,8 @@ export const matchController = {
   },
 
   // 获取匹配列表
-  async getMatches(req: AuthRequest, res: Response) {
+  async getMatches(_req: Request, res: Response) {
     try {
-      const userId = req.user?.id;
-
       // 这里应该从数据库获取匹配列表
       const matches = [
         {
@@ -130,7 +119,6 @@ export const matchController = {
           }
         }
       ];
-
       res.json({
         success: true,
         data: {

@@ -32,7 +32,12 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: process.env['FRONTEND_URL'] || "http://localhost:3000",
+    origin: [
+      "http://localhost:3000",
+      "http://localhost:3002",
+      "http://localhost:3004",
+      "http://localhost:3005"
+    ],
     methods: ["GET", "POST"]
   }
 });
@@ -45,16 +50,17 @@ const fallbackPorts = [8002, 8003, 8004, 8005];
 app.use(helmet());
 app.use(compression());
 app.use(cors({
-  origin: process.env['FRONTEND_URL'] || "http://localhost:3000",
+  origin: [
+    "http://localhost:3000",
+    "http://localhost:3002",
+    "http://localhost:3004",
+    "http://localhost:3005"
+  ],
   credentials: true
 }));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('combined', { stream: { write: (message) => logger.info(message.trim()) } }));
-
-// 速率限制中间件（在Redis连接后注册）
-app.use(createRateLimitMiddleware());
-app.use('/api/auth/login', createLoginRateLimit());
 
 // 健康检查
 app.get('/health', (_req, res) => {
@@ -123,6 +129,10 @@ async function startServer() {
     // 连接Redis
     await connectRedis();
     logger.info('Redis connected successfully');
+
+    // 速率限制中间件（在Redis连接后注册）
+    app.use(createRateLimitMiddleware());
+    app.use('/api/auth/login', createLoginRateLimit());
 
     // 创建端口管理器
     const portManager = new PortManager({

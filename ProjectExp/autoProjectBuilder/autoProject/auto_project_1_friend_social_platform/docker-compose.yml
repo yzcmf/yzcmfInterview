@@ -93,13 +93,13 @@ services:
   # 前端应用
   frontend:
     build:
-      context: ./frontend
+      context: ./frontends/frontend1-2
       dockerfile: Dockerfile.dev
     container_name: social_platform_frontend
     ports:
-      - "3000:3000"
+      - "3002:3000"
     volumes:
-      - ./frontend:/app
+      - ./frontends/frontend1-2:/app
       - /app/node_modules
     environment:
       - NODE_ENV=development
@@ -202,7 +202,7 @@ services:
 #   image: grafana/grafana:latest
 #   container_name: social_platform_grafana
 #   ports:
-#     - "3001:3000"
+#     - "3002:3000"
 #   environment:
 #     - GF_SECURITY_ADMIN_PASSWORD=admin123
 #   volumes:
